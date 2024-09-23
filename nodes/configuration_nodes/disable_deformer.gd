@@ -1,0 +1,2 @@
+extends BaseDeformerConfigNode
+class_name CurveDeformerDisableAll
