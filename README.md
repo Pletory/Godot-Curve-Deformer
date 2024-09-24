@@ -11,7 +11,7 @@ The Curve Deformer plugin simplifies this task by offering features like the def
 
 ---
 
-A big thanks 🙏 to @[addmix](https://github.com/addmix) who support the development of the pluging!
+A big thanks 🙏 to [addmix](https://github.com/addmix) who supported the development of the plugin !
 
 ---
 
