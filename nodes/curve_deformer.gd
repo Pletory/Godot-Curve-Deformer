@@ -150,7 +150,7 @@ func recalculate_node_data_recursive(path : Path3D, _position_on_curve : float, 
 	
 	#use nodes to whitelist modifying grandchildren and beyond
 	# check grandchild's owner, might be useful to not require using modified_data for more grandchildren
-	if node.has_node("CurveDeformerAllow") or node.get_parent() == path:
+	if node.has_node("CurveDeformerAllowTreeSearch") or node.get_parent() == path:
 		for child : Node in node.get_children():
 			if not child is Node3D:
 				continue
