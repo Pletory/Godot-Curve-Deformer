@@ -16,6 +16,9 @@ enum OffsetType{RELATIVE, CONSTANT}
 var duplicated_children : Array[Node] = []
 
 func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		recalculate.call_deferred()
+	
 	if get_parent() is CurveDeformer:
 		get_parent().calculate.connect(recalculate)
 func _exit_tree() -> void:
@@ -44,6 +47,12 @@ func recalculate() -> void:
 	
 	var aabb = get_aabb_recursive(self)
 	
+	#prevents near-infinite recursion.
+	if is_equal_approx(aabb.size.z, 0.0):
+		print_stack()
+		push_error("AABB size.z == 0, aborting.")
+		return
+	
 	var path3d : Path3D = get_first_parent_of_type(self, Path3D)
 	var curve : Curve3D = path3d.curve
 	if fit_curve_length:
@@ -52,6 +61,7 @@ func recalculate() -> void:
 		var fitting_scale_factor : float = nominal_length / (roundf(instance_count_to_fit) * aabb.size.z)
 		
 		array_count = instance_count_to_fit - 1
+		#array_count = min(array_count, 100) #debug
 		scale = Vector3(1, 1, fitting_scale_factor)
 	else:
 		scale = Vector3.ONE
