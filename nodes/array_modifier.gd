@@ -61,7 +61,7 @@ func recalculate() -> void:
 		var fitting_scale_factor : float = nominal_length / (roundf(instance_count_to_fit) * aabb.size.z)
 		
 		array_count = instance_count_to_fit - 1
-		#array_count = min(array_count, 100) #debug
+		array_count = min(array_count, 100) #debug
 		scale = Vector3(1, 1, fitting_scale_factor)
 	else:
 		scale = Vector3.ONE
@@ -102,7 +102,7 @@ func create_duplicate_children(offset : Transform3D) -> Array[Node]:
 		var duplicate : Node = child.duplicate()
 		
 		if duplicate is Node3D:
-			duplicate.transform = duplicate.transform * offset
+			duplicate.transform = offset * duplicate.transform
 		
 		add_child(duplicate, false, Node.INTERNAL_MODE_BACK)
 		duplicated_nodes.append(duplicate)

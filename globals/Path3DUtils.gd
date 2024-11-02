@@ -33,30 +33,21 @@ static func deform_mesh_to_path(path : Path3D, _position_on_curve : float, node 
 		
 		var arrays : Array = node.mesh.surface_get_arrays(surface)
 		
-		#for index : int in arrays[Mesh.ARRAY_VERTEX].size():
-			#var vertex : Vector3 = arrays[Mesh.ARRAY_VERTEX][index]
-			#var normal : Vector3 = arrays[Mesh.ARRAY_NORMAL][index]
-			#
-			#var vertex_transform : Transform3D = deform_transform_to_path(path, _position_on_curve, Transform3D(Basis(), Vector3(0, 0, vertex.z)), node.get_parent().global_transform) * offset
-			#vertex_transform.origin += Vector3(vertex.x, vertex.y, 0.0) * vertex_transform.basis.inverse()
-			#new_vertex_array.append(vertex_transform.origin)
-			#new_normal_array.append(normal * vertex_transform.basis.inverse())
-		
+		var base_path_transform : Transform3D = sample_path_transform(path, _position_on_curve, false, true, _use_looping)
 		for index : int in arrays[Mesh.ARRAY_VERTEX].size():
 			var vertex : Vector3 = arrays[Mesh.ARRAY_VERTEX][index]
 			var normal : Vector3 = arrays[Mesh.ARRAY_NORMAL][index]
-			var offset_copy : Transform3D = offset
 			
-			var global_vertex : Vector3 = vertex * offset_copy.basis.inverse().get_rotation_quaternion()
-			var vertex_offset : Vector3 = global_vertex * offset_copy.basis.get_scale() * Vector3(1, 1, 0)
-			var vertex_depth : float = -(global_vertex * offset_copy.basis.get_scale()).z
+			var real_vertex_position : Vector3 = offset * vertex
+			var vertex_offset_from_curve : Vector3 = real_vertex_position * Vector3(1, 1, 0)
+			var vertex_depth : float = -real_vertex_position.z
 			
-			var path_transform : Transform3D = sample_path_transform(path, _position_on_curve, false, true, _use_looping).inverse() * sample_path_transform(path, _position_on_curve + vertex_depth, false, true, _use_looping) * Transform3D(Basis(), offset.origin)
-			#path_transform.origin.z = 0.0
+			var path_position_transform : Transform3D = sample_path_transform(path, _position_on_curve + vertex_depth, false, true, _use_looping)
+			var required_transform : Transform3D = offset.affine_inverse() * (base_path_transform.inverse() * path_position_transform)
 			
-			offset_copy.basis = Basis(offset_copy.basis.get_rotation_quaternion())
-			new_vertex_array.append((path_transform.origin + vertex_offset * path_transform.basis.inverse()) * offset_copy / offset.basis.get_scale())
-			new_normal_array.append(normal * path_transform.basis.inverse())
+			new_vertex_array.append(required_transform * vertex_offset_from_curve)
+			#normals aren't quite right
+			new_normal_array.append(required_transform.basis * normal)
 		
 		var new_arrays : Array = arrays.duplicate(true)
 		new_arrays.resize(Mesh.ARRAY_MAX)
