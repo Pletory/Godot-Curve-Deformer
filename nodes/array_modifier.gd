@@ -85,7 +85,7 @@ func get_aabb_recursive(node : Node3D) -> AABB:
 		total_aabb = node.get_aabb()
 	
 	for child : Node in node.get_children():
-		if not child is Node3D:
+		if not child is Node3D or child.has_node("CurveDeformerIgnoreAABB"):
 			continue
 		
 		var child_aabb : AABB = get_aabb_recursive(child)
