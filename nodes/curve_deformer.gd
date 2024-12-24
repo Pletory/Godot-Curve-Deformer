@@ -44,7 +44,7 @@ var offset := Transform3D():
 
 @export_category("")
 
-var recalculation_queued : bool = true
+var recalculation_queued : bool = not Engine.is_editor_hint()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings := PackedStringArray()
