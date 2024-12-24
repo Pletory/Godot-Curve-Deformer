@@ -61,7 +61,7 @@ func recalculate() -> void:
 		var fitting_scale_factor : float = nominal_length / (roundf(instance_count_to_fit) * aabb.size.z)
 		
 		array_count = instance_count_to_fit - 1
-		array_count = min(array_count, 100) #debug
+		array_count = min(array_count, 500) #debug
 		scale = Vector3(1, 1, fitting_scale_factor)
 	else:
 		scale = Vector3.ONE
