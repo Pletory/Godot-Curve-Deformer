@@ -44,7 +44,7 @@ static func deform_mesh_to_path(path : Path3D, _position_on_curve : float, node 
 			var vertex_depth : float = -real_vertex_position.z
 			
 			var path_position_transform : Transform3D = sample_path_transform(path, _position_on_curve + vertex_depth, true, true, _use_looping)
-			var required_transform : Transform3D = offset.affine_inverse() * (base_path_transform.affine_inverse() * path_position_transform)
+			var required_transform : Transform3D = offset.affine_inverse() * (base_path_transform.inverse() * path_position_transform)
 			
 			new_vertex_array.append(required_transform * vertex_offset_from_curve)
 			new_normal_array.append(required_transform.basis * real_normal)

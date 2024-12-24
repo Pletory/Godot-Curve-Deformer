@@ -57,8 +57,10 @@ func recalculate() -> void:
 	var curve : Curve3D = path3d.curve
 	if fit_curve_length:
 		var nominal_length : float = curve.get_baked_length()
+		
 		var instance_count_to_fit : int = int(nominal_length / aabb.size.z)
-		var fitting_scale_factor : float = nominal_length / (roundf(instance_count_to_fit) * aabb.size.z)
+		var fitting_scale_factor : float = nominal_length / (roundf(instance_count_to_fit) * aabb.sixze.z) * 1.000005 #multiply to give slight overlap, as there are precision issues with scale factors.
+		#this overlap is only needed when we adjust the scale
 		
 		array_count = instance_count_to_fit - 1
 		array_count = min(array_count, 500) #debug
