@@ -59,7 +59,7 @@ func recalculate() -> void:
 		var nominal_length : float = curve.get_baked_length()
 		
 		var instance_count_to_fit : int = int(nominal_length / aabb.size.z)
-		var fitting_scale_factor : float = nominal_length / (roundf(instance_count_to_fit) * aabb.sixze.z) * 1.000005 #multiply to give slight overlap, as there are precision issues with scale factors.
+		var fitting_scale_factor : float = nominal_length / (roundf(instance_count_to_fit) * aabb.size.z) * 1.000005 #multiply to give slight overlap, as there are precision issues with scale factors.
 		#this overlap is only needed when we adjust the scale
 		
 		array_count = instance_count_to_fit - 1
